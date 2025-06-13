@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Savings Goal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f4f6f8;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input, button {
+            padding: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .progress {
+            margin-top: 20px;
+        }
+
+        .bar {
+            height: 30px;
+            background: #3f51b5;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎯 Set Your Savings Goal</h2>
+
+        <form method="POST" action="{{ url_for('savings_goal') }}">
+            <input type="number" name="goal_amount" placeholder="Enter Goal Amount (₹)" required />
+            <input type="date" name="start_date" required />
+            <input type="date" name="end_date" required />
+            <button type="submit">Save Goal</button>
+        </form>
+
+        {% if progress %}
+        <div class="progress">
+            <h3>Progress: ₹{{ current_savings }} / ₹{{ goal_amount }}</h3>
+            <div class="bar" style="width: {{ progress }}%;">{{ progress }}%</div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
