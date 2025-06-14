@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_mysqldb import MySQL
 from datetime import datetime
 from collections import defaultdict
+
 app = Flask(__name__)
 
 # MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''  # No password by default in XAMPP
+app.config['MYSQL_USER'] = 'coder'
+app.config['MYSQL_PASSWORD'] = 'password123'
 app.config['MYSQL_DB'] = 'finance_tracker'
 
 mysql = MySQL(app)
@@ -95,12 +96,31 @@ def savings_goal():
     current_savings = sum(float(row[0]) for row in rows if row[1].lower() == 'income') - \
                       sum(float(row[0]) for row in rows if row[1].lower() != 'income')
 
-    progress = (current_savings / goal_amount) * 100 if goal_amount > 0 else 0
+    progress = (current_savings / float(goal_amount)) * 100 if goal_amount > 0 else 0
     cur.close()
 
     return render_template('savings.html',
                            goal_amount=goal_amount,
                            current_savings=current_savings,
                            progress=int(progress))
+
+# ✅ New route to handle /add-expense
+@app.route('/add-expense', methods=['GET', 'POST'])
+def add_expense():
+    if request.method == 'POST':
+        title = request.form['title']
+        amount = request.form['amount']
+        category = request.form['category']
+        date = request.form['date']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO expenses (title, amount, category, date) VALUES (%s, %s, %s, %s)",
+                    (title, amount, category, date))
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for('home'))
+
+    return render_template('add_expense.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

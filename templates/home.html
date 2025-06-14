@@ -135,6 +135,19 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
+  .chart-container {
+            display: flex;
+            justify-content: center;  /* Center the canvas */
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+  }
+     /* Canvas resizing */
+        #categoryChart {
+             width: 50% !important;  /* Set the width to 50% */
+            height: auto !important;  /* Maintain the aspect ratio */
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -180,7 +193,10 @@ input:checked + .slider:before {
             <button class="btn">⚙️ Settings</button>
         </div>
     </main>
-    <canvas id="categoryChart" width="400" height="400"></canvas>
+
+     <div class="chart-container">
+        <canvas id="categoryChart"></canvas>
+    </div>
     <h2 style="margin-top: 60px; text-align: center;">📊 Monthly Income vs Expense</h2>
 <canvas id="incomeExpenseChart" width="600" height="300"></canvas>
 
@@ -210,7 +226,8 @@ input:checked + .slider:before {
                     position: 'bottom',
                 }
             }
-        }
+        },
+
     };
 
     const categoryChart = new Chart(ctx, config);
