@@ -123,5 +123,9 @@ def add_expense():
 
     return render_template('add_expense.html')
 
+@app.route('/money-rule')
+def money_rule():
+    return render_template('money_rule.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

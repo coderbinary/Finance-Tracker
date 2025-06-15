@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>50:30:20 Money Rule Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to ensure font and basic layout consistency */
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .calculator-container {
+                padding: 20px;
+                margin-top: 20px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .input-group label {
+                font-size: 0.9rem;
+            }
+            input[type="number"], button {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            .results p, .explanation {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen p-4">
+    <div class="calculator-container bg-white p-8 rounded-lg shadow-xl w-full max-w-md text-center mt-12">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">50:30:20 Money Management Rule </h1>
+
+        <div class="input-group mb-6 text-left">
+            <label for="salary" class="block text-gray-700 font-semibold mb-2">Enter Your Monthly Net Salary (INR):</label>
+            <input type="number" id="salary" placeholder="e.g., 50000"
+                   class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+        </div>
+
+        <button id="calculateBtn"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 ease-in-out shadow-lg mb-8">
+            Calculate
+        </button>
+
+        <div class="results mt-6 pt-6 border-t border-gray-200 text-left">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Your 50:30:20 Breakdown:</h2>
+            <p class="text-lg mb-3 text-gray-700">
+                <strong class="text-green-600">Needs (50%):</strong> <span id="needsAmount" class="font-bold text-blue-600">0.00</span> INR
+            </p>
+            <p class="text-lg mb-3 text-gray-700">
+                <strong class="text-yellow-600">Wants (30%):</strong> <span id="wantsAmount" class="font-bold text-blue-600">0.00</span> INR
+            </p>
+            <p class="text-lg mb-3 text-gray-700">
+                <strong class="text-purple-600">Savings (20%):</strong> <span id="savingsAmount" class="font-bold text-blue-600">0.00</span> INR
+            </p>
+
+            <p class="explanation text-sm text-gray-600 mt-6 leading-relaxed">
+                <strong class="text-gray-800">Needs:</strong> These are essential expenses required for survival, such as rent/mortgage, utilities, groceries, transportation, insurance, and minimum debt payments.
+            </p>
+            <p class="explanation text-sm text-gray-600 mt-3 leading-relaxed">
+                <strong class="text-gray-800">Wants:</strong> These are discretionary expenses that improve your quality of life but are not strictly necessary. Examples include dining out, entertainment, hobbies, new gadgets, and vacations.
+            </p>
+            <p class="explanation text-sm text-gray-600 mt-3 leading-relaxed">
+                <strong class="text-gray-800">Savings:</strong> This portion is dedicated to your financial future. It includes building an emergency fund, contributions to retirement accounts, long-term investments, and paying off high-interest debt beyond minimums.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Ensure the JavaScript runs after the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to the HTML elements
+            const salaryInput = document.getElementById('salary');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const needsAmountSpan = document.getElementById('needsAmount');
+            const wantsAmountSpan = document.getElementById('wantsAmount');
+            const savingsAmountSpan = document.getElementById('savingsAmount');
+
+            // Add an event listener to the calculate button
+            calculateBtn.addEventListener('click', () => {
+                // Get the salary value from the input and convert it to a floating-point number
+                const salary = parseFloat(salaryInput.value);
+
+                // Basic input validation: Check if salary is a valid positive number
+                if (isNaN(salary) || salary <= 0) {
+                    // Use a custom message box instead of alert() for better UX
+                    alert("Please enter a valid positive monthly salary.");
+                    // Reset the displayed amounts
+                    needsAmountSpan.textContent = '0.00';
+                    wantsAmountSpan.textContent = '0.00';
+                    savingsAmountSpan.textContent = '0.00';
+                    return; // Stop the function execution if input is invalid
+                }
+
+                // Calculate the amounts based on the 50:30:20 rule
+                const needs = salary * 0.50;    // 50% for needs
+                const wants = salary * 0.30;    // 30% for wants
+                const savings = salary * 0.20;  // 20% for savings
+
+                // Update the text content of the respective span elements
+                // toFixed(2) formats the number to two decimal places
+                needsAmountSpan.textContent = needs.toFixed(2);
+                wantsAmountSpan.textContent = wants.toFixed(2);
+                savingsAmountSpan.textContent = savings.toFixed(2);
+            });
+        });
+
+        // Simple alert replacement function for better UX (though not strictly required for this simple app)
+        function alert(message) {
+            const container = document.querySelector('.calculator-container');
+            let messageBox = document.getElementById('messageBox');
+
+            if (!messageBox) {
+                messageBox = document.createElement('div');
+                messageBox.id = 'messageBox';
+                messageBox.className = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white p-4 rounded-md shadow-lg z-50 transition-opacity duration-300 opacity-0';
+                container.appendChild(messageBox);
+            }
+
+            messageBox.textContent = message;
+            messageBox.style.opacity = '1';
+
+            setTimeout(() => {
+                messageBox.style.opacity = '0';
+            }, 3000); // Hide after 3 seconds
+        }
+    </script>
+</body>
+</html>
